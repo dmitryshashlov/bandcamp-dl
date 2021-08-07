@@ -31,7 +31,8 @@ Options:
     -k --keep-spaces        Retain whitespace in filenames
     -u --keep-upper         Retain uppercase letters in filenames
     -p --print-title        Only print track titles
-       --skip-download      Do not download files
+    --skip-download         Do not download files
+    --album-title=<title>   Title for the album to write in ID3 tags
 
 """
 """
@@ -112,7 +113,7 @@ def main():
     if arguments['--print-title']:
         for album in albumList:
             for track in album['tracks']:
-                print("%s, %s %s" % (track['purchase_url'], track['title'], album['artist']))
+                print("%s,%s,%s %s" % (track['purchase_url'], album['title'], track['title'], album['artist']))
     elif arguments['URL'] or arguments['--artist']:
         logging.debug("Preparing download process..")
         for album in albumList:
@@ -121,7 +122,8 @@ def main():
                                                      arguments['--embed-art'], arguments['--no-slugify'],
                                                      arguments['--ok-chars'], arguments['--space-char'],
                                                      arguments['--ascii-only'], arguments['--keep-spaces'],
-                                                     arguments['--keep-upper'], arguments['--debug'], album['url'])
+                                                     arguments['--keep-upper'], arguments['--debug'], 
+                                                     arguments['--skip-download'], arguments['--album-title'], album['url'])
             logging.debug("Initiating download process..")
             bandcamp_downloader.start(album)
             # Add a newline to stop prompt mangling

@@ -21,7 +21,7 @@ from bandcamp_dl.utils.clean_print import print_clean
 
 class BandcampDownloader:
     def __init__(self, template, directory, overwrite, embed_lyrics, grouping, embed_art, no_slugify, ok_chars,
-                 space_char, ascii_only, keep_space, keep_upper, debugging, urls=None):
+                 space_char, ascii_only, keep_space, keep_upper, debugging, skip_download, album_title, urls=None):
         """Initialize variables we will need throughout the Class
 
         :param urls: list of urls
@@ -49,6 +49,8 @@ class BandcampDownloader:
         self.keep_space = keep_space
         self.keep_upper = keep_upper
         self.debugging = debugging
+        self.skip_download = skip_download
+        self.album_title = album_title
 
     def start(self, album: dict):
         """Start album download process
@@ -133,7 +135,7 @@ class BandcampDownloader:
             track_meta = {
                 "artist": album['artist'],
                 "label": album['label'],
-                "album": album['title'],
+                "album": self.album_title if self.album_title else album['title'],
                 "title": track['title'],
                 "track": track['track'],
                 # TODO: Find out why the 'lyrics' key seems to vanish.
@@ -144,7 +146,10 @@ class BandcampDownloader:
             self.num_tracks = len(album['tracks'])
             self.track_num = track_index + 1
 
-            filepath = self.template_to_path(track_meta, self.ascii_only, self.ok_chars, self.space_char, self.keep_space, self.keep_upper) + ".tmp"
+            filepath = self.template_to_path(track_meta, self.ascii_only, self.ok_chars, self.space_char, self.keep_space, self.keep_upper)
+            if not self.skip_download:
+                filepath += ".tmp"
+
             filename = filepath.rsplit('/', 1)[1]
             dirname = self.create_directory(filepath)
 
@@ -215,8 +220,11 @@ class BandcampDownloader:
                     print(e)
                     print("Downloading failed..")
                     return False
-            if skip is False:
-                self.write_id3_tags(filepath, track_meta)
+
+            if not self.skip_download:
+                logging.debug(" Renaming:\n\t{} -to-> {}".format(filepath, filepath[:-4]))
+
+            self.write_id3_tags(filepath, track_meta)
 
         if os.path.isfile("{}/{}.not.finished".format(self.directory, __version__)):
             os.remove("{}/{}.not.finished".format(self.directory, __version__))
@@ -267,13 +275,14 @@ class BandcampDownloader:
         audio.save()
 
         logging.debug(" Encoding process finished..")
-        logging.debug(" Renaming:\n\t{} -to-> {}".format(filepath, filepath[:-4]))
+        if not self.skip_download:
+            logging.debug(" Renaming:\n\t{} -to-> {}".format(filepath, filepath[:-4]))
 
-        try:
-            os.rename(filepath, filepath[:-4])
-        except WindowsError:
-            os.remove(filepath[:-4])
-            os.rename(filepath, filepath[:-4])
+            try:
+                os.rename(filepath, filepath[:-4])
+            except WindowsError:
+                os.remove(filepath[:-4])
+                os.rename(filepath, filepath[:-4])
 
         if not self.debugging:
             print_clean("\r({}/{}) [{}] :: Finished: {}".format(self.track_num, self.num_tracks, "=" * 50, filename))

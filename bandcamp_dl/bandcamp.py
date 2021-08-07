@@ -43,6 +43,9 @@ class Bandcamp:
             page_json = {**page_json, **json.loads(entry)}
         logging.debug(" BandcampJSON generated..")
 
+        # print(json.dumps(page_json['current']['title'], indent=4, sort_keys=True))
+        # exit()
+
         logging.debug(" Generating Album..")
         self.tracks = page_json['trackinfo']
 
