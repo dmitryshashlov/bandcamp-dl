@@ -73,14 +73,14 @@ def main():
     bandcamp = Bandcamp()
 
     basedir = arguments['--base-dir'] or os.getcwd()
-    session_file = "{}/{}.not.finished".format(basedir, __version__)
+    # session_file = "{}/{}.not.finished".format(basedir, __version__)
 
-    if os.path.isfile(session_file) and arguments['URL'] is None:
-        with open(session_file, "r") as f:
-            arguments = ast.literal_eval(f.readline())
-    else:
-        with open(session_file, "w") as f:
-            f.write("".join(str(arguments).split('\n')))
+    # if os.path.isfile(session_file) and arguments['URL'] is None:
+    #     with open(session_file, "r") as f:
+    #         arguments = ast.literal_eval(f.readline())
+    # else:
+    #     with open(session_file, "w") as f:
+    #         f.write("".join(str(arguments).split('\n')))
 
     if arguments['--artist'] and arguments['--album']:
         urls = Bandcamp.generate_album_url(arguments['--artist'], arguments['--album'], "album")
