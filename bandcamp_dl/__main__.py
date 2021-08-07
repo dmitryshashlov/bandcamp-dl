@@ -31,6 +31,7 @@ Options:
     -k --keep-spaces        Retain whitespace in filenames
     -u --keep-upper         Retain uppercase letters in filenames
     -p --print-title        Only print track titles
+       --skip-download      Do not download files
 
 """
 """
@@ -111,7 +112,7 @@ def main():
     if arguments['--print-title']:
         for album in albumList:
             for track in album['tracks']:
-                print("%s %s" % (track['title'], album['artist']))
+                print("%s, %s %s" % (track['purchase_url'], track['title'], album['artist']))
     elif arguments['URL'] or arguments['--artist']:
         logging.debug("Preparing download process..")
         for album in albumList:

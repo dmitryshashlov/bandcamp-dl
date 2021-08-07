@@ -76,7 +76,9 @@ class Bandcamp:
             if lyrics:
                 track['lyrics'] = self.get_track_lyrics("{}{}#lyrics".format(artist_url, track['title_link']))
             if track['file'] is not None:
+                title_link = track['title_link']
                 track = self.get_track_metadata(track)
+                track['purchase_url'] = "%s%s" % (artist_url, title_link)
                 album['tracks'].append(track)
 
         album['full'] = self.all_tracks_available()
