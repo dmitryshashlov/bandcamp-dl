@@ -30,6 +30,7 @@ Options:
     -a --ascii-only         Only allow ASCII chars (北京 (capital of china) -> bei-jing-capital-of-china)
     -k --keep-spaces        Retain whitespace in filenames
     -u --keep-upper         Retain uppercase letters in filenames
+    -p --print-title        Only print track titles
 
 """
 """
@@ -73,14 +74,14 @@ def main():
     bandcamp = Bandcamp()
 
     basedir = arguments['--base-dir'] or os.getcwd()
-    # session_file = "{}/{}.not.finished".format(basedir, __version__)
+    session_file = "{}/{}.not.finished".format(basedir, __version__)
 
-    # if os.path.isfile(session_file) and arguments['URL'] is None:
-    #     with open(session_file, "r") as f:
-    #         arguments = ast.literal_eval(f.readline())
-    # else:
-    #     with open(session_file, "w") as f:
-    #         f.write("".join(str(arguments).split('\n')))
+    if os.path.isfile(session_file) and arguments['URL'] is None:
+        with open(session_file, "r") as f:
+            arguments = ast.literal_eval(f.readline())
+    else:
+        with open(session_file, "w") as f:
+            f.write("".join(str(arguments).split('\n')))
 
     if arguments['--artist'] and arguments['--album']:
         urls = Bandcamp.generate_album_url(arguments['--artist'], arguments['--album'], "album")
@@ -107,7 +108,11 @@ def main():
             print("Full album not available. Skipping ", album['title'], " ...")
             albumList.remove(album)  # Remove not-full albums BUT continue with the rest of the albums.
 
-    if arguments['URL'] or arguments['--artist']:
+    if arguments['--print-title']:
+        for album in albumList:
+            for track in album['tracks']:
+                print("%s %s" % (track['title'], album['artist']))
+    elif arguments['URL'] or arguments['--artist']:
         logging.debug("Preparing download process..")
         for album in albumList:
             bandcamp_downloader = BandcampDownloader(arguments['--template'], basedir, arguments['--overwrite'],

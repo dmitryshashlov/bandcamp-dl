@@ -78,7 +78,6 @@ class Bandcamp:
             if track['file'] is not None:
                 track = self.get_track_metadata(track)
                 album['tracks'].append(track)
-            print(track['title'] + album['artist'])
 
         album['full'] = self.all_tracks_available()
         if art:
@@ -86,8 +85,6 @@ class Bandcamp:
 
         logging.debug(" Album generated..")
         logging.debug(" Album URL: {}".format(album['url']))
-
-        exit()
 
         return album
 
