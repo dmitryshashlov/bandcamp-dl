@@ -220,11 +220,8 @@ class BandcampDownloader:
                     print(e)
                     print("Downloading failed..")
                     return False
-
-            if not self.skip_download:
-                logging.debug(" Renaming:\n\t{} -to-> {}".format(filepath, filepath[:-4]))
-
-            self.write_id3_tags(filepath, track_meta)
+            if skip is False or self.skip_download:
+                self.write_id3_tags(filepath, track_meta)
 
         if os.path.isfile("{}/{}.not.finished".format(self.directory, __version__)):
             os.remove("{}/{}.not.finished".format(self.directory, __version__))
