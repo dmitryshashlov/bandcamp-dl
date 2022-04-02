@@ -21,7 +21,8 @@ from bandcamp_dl.utils.clean_print import print_clean
 
 class BandcampDownloader:
     def __init__(self, template, directory, overwrite, embed_lyrics, grouping, embed_art, no_slugify, ok_chars,
-                 space_char, ascii_only, keep_space, keep_upper, debugging, skip_download, album_title, urls=None):
+                 space_char, ascii_only, keep_space, keep_upper, debugging, skip_download, album_title, genre, label,
+                 urls=None):
         """Initialize variables we will need throughout the Class
 
         :param urls: list of urls
@@ -51,6 +52,8 @@ class BandcampDownloader:
         self.debugging = debugging
         self.skip_download = skip_download
         self.album_title = album_title
+        self.genre = genre
+        self.label = label
 
     def start(self, album: dict):
         """Start album download process
@@ -134,8 +137,9 @@ class BandcampDownloader:
         for track_index, track in enumerate(album['tracks']):
             track_meta = {
                 "artist": album['artist'],
-                "label": album['label'],
+                "label": self.label if self.label else album['label'],
                 "album": self.album_title if self.album_title else album['title'],
+                "genre": self.genre,
                 "title": track['title'],
                 "track": track['track'],
                 # TODO: Find out why the 'lyrics' key seems to vanish.
@@ -269,6 +273,8 @@ class BandcampDownloader:
         audio["artist"] = meta['artist']
         audio["album"] = meta['album']
         audio["date"] = meta["date"]
+        audio["genre"] = meta["genre"]
+        audio["organization"] = meta["label"]
         audio.save()
 
         logging.debug(" Encoding process finished..")

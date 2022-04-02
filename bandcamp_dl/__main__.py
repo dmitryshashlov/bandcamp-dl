@@ -7,32 +7,34 @@ Arguments:
     URL         Bandcamp album/track URL
 
 Options:
-    -h --help               Show this screen.
-    -v --version            Show version.
-    -d --debug              Verbose logging.
-    --artist=<artist>       The artist's slug (from the URL, --track or --album is required)
-    --track=<track>         The track's slug (from the URL, for use with --artist)
-    --album=<album>         The album's slug (from the URL, for use with --artist)
-    --template=<template>   Output filename template.
-                            [default: %{artist}/%{album}/%{track} - %{title}]
-    --base-dir=<dir>        Base location of which all files are downloaded.
-    -f --full-album         Download only if all tracks are available.
-    -o --overwrite          Overwrite tracks that already exist. Default is False.
-    -n --no-art             Skip grabbing album art.
-    -e --embed-lyrics       Embed track lyrics (If available)
-    -g --group              Use album/track Label as iTunes grouping.
-    -r --embed-art          Embed album art (If available)
-    -y --no-slugify         Disable slugification of track, album, and artist names.
-    -c --ok-chars=<chars>   Specify allowed chars in slugify.
-                            [default: -_~]
-    -s --space-char=<char>  Specify the char to use in place of spaces.
-                            [default: -]
-    -a --ascii-only         Only allow ASCII chars (北京 (capital of china) -> bei-jing-capital-of-china)
-    -k --keep-spaces        Retain whitespace in filenames
-    -u --keep-upper         Retain uppercase letters in filenames
-    -p --print-title        Only print track titles
-    --skip-download         Do not download files
-    --album-title=<title>   Title for the album to write in ID3 tags
+    -h --help                           Show this screen.
+    -v --version                        Show version.
+    -d --debug                          Verbose logging.
+    --artist=<artist>                   The artist's slug (from the URL, --track or --album is required)
+    --track=<track>                     The track's slug (from the URL, for use with --artist)
+    --album=<album>                     The album's slug (from the URL, for use with --artist)
+    --template=<template>               Output filename template.
+                                        [default: %{artist}/%{album}/%{track} - %{title}]
+    --base-dir=<dir>                    Base location of which all files are downloaded.
+    -f --full-album                     Download only if all tracks are available.
+    -o --overwrite                      Overwrite tracks that already exist. Default is False.
+    -n --no-art                         Skip grabbing album art.
+    -e --embed-lyrics                   Embed track lyrics (If available)
+    -g --group                          Use album/track Label as iTunes grouping.
+    -r --embed-art                      Embed album art (If available)
+    -y --no-slugify                     Disable slugification of track, album, and artist names.
+    -c --ok-chars=<chars>               Specify allowed chars in slugify.
+                                        [default: -_~]
+    -s --space-char=<char>              Specify the char to use in place of spaces.
+                                        [default: -]
+    -a --ascii-only                     Only allow ASCII chars (北京 (capital of china) -> bei-jing-capital-of-china)
+    -k --keep-spaces                    Retain whitespace in filenames
+    -u --keep-upper                     Retain uppercase letters in filenames
+    -p --print-title                    Only print track titles
+    --skip-download                     Do not download files
+    --album-title=<title>               Title for the album to write in ID3 tags
+    --genre=<genre>                     Album genre
+    --label=<label>                     Label released the album
 
 """
 """
@@ -122,8 +124,10 @@ def main():
                                                      arguments['--embed-art'], arguments['--no-slugify'],
                                                      arguments['--ok-chars'], arguments['--space-char'],
                                                      arguments['--ascii-only'], arguments['--keep-spaces'],
-                                                     arguments['--keep-upper'], arguments['--debug'], 
-                                                     arguments['--skip-download'], arguments['--album-title'], album['url'])
+                                                     arguments['--keep-upper'], arguments['--debug'],
+                                                     arguments['--skip-download'], arguments['--album-title'],
+                                                     arguments['--genre'], arguments['--label'],
+                                                     album['url'])
             logging.debug("Initiating download process..")
             bandcamp_downloader.start(album)
             # Add a newline to stop prompt mangling
