@@ -273,8 +273,10 @@ class BandcampDownloader:
         audio["artist"] = meta['artist']
         audio["album"] = meta['album']
         audio["date"] = meta["date"]
-        audio["genre"] = meta["genre"]
-        audio["organization"] = meta["label"]
+        if meta["genre"]:
+            audio["genre"] = meta["genre"]
+        if meta["label"]:
+            audio["organization"] = meta["label"]
         audio.save()
 
         logging.debug(" Encoding process finished..")
